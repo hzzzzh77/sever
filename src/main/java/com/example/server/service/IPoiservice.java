@@ -6,8 +6,12 @@ import com.example.server.pojo.Pic;
 
 import java.util.List;
 
-public interface Ipoiservice extends IService<Poi> {
+public interface IPoiservice extends IService<Poi> {
 
 
     void saveMain(Poi poi, List<Pic> pics);
+
+    void deleteMain(Integer id);
+
+    void updateMain(Poi poi, List<Pic> pics);
 }
