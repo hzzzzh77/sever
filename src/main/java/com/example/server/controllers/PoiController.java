@@ -34,10 +34,8 @@ public class PoiController {//111111
             @RequestParam(defaultValue = "1") int pagenum,//@RequestParam(defaultValue = "")设置默认值
             @RequestParam(defaultValue = "30") int pagesize){
         log.info("poi list，pagenum={},pagesize={}",pagenum,pagesize);
-
        Page<Poi> page = new Page<>(pagenum,pagesize);
        IPage<Poi> pageResult = poiservice.page(page);
-
         List voList= pageResult.getRecords().stream().map(poi -> {
             PoiVo poiVo = new PoiVo();
             QueryWrapper query = new QueryWrapper();
@@ -47,11 +45,10 @@ public class PoiController {//111111
             poiVo.setPics(pics);
             return poiVo;
         }).collect(Collectors.toList());
-
         pageResult.setRecords(voList);
-
         return Result.success(pageResult);
     }
+
     @GetMapping("/detail/{id}")//查看
     public Result detail(@PathVariable int id){
         log.info("poi detail,id={}",id);
@@ -71,12 +68,9 @@ public class PoiController {//111111
         Poi poi = new Poi();
         BeanUtils.copyProperties(poiForm,poi);
         poiservice.saveMain(poi,poiForm.getPics());
-
-//        PoiVo poiVo = new PoiVo();
-//        BeanUtils.copyProperties(poi,poiVo);
-//        return Result.success(poiVo);
         return detail(poi.getId());
     }
+
     @PutMapping("/edit/{id}")//修改
     public Result edit(@RequestBody Poi poi,@PathVariable int id){
         log.info("poi edit,poi={}",poi);
@@ -85,6 +79,7 @@ public class PoiController {//111111
 
         return Result.success();
     }
+
     @DeleteMapping ("/delete/{id}")//删除
     public Result delete(@PathVariable int id){
         log.info("poi delete,id={}",id);
