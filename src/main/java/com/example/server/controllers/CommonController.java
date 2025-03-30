@@ -4,6 +4,8 @@ import com.example.server.service.IStorageService;
 import com.example.server.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.support.JdbcAccessor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,17 +22,26 @@ import javax.servlet.http.HttpServletResponse;
 public class CommonController {
 
     @Autowired
+
     private IStorageService storageService;
+    @Value("${upload.accessPath}")
+    public String accessPath;
+    @Value("${upload.localPath}")
+    public String localPath;
+
+    @Autowired
+    private JdbcAccessor jdbcAccessor;
 
     @PostMapping(value = "/upload")
     public Result upload(HttpServletRequest request, HttpServletResponse response) {
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
         MultipartFile file=multipartRequest.getFile("file");
         file.getOriginalFilename();
-        String filename=file.getOriginalFilename();
-        log.info("Upload file.filename={}",filename);
-        storageService.save(file,filename,"E:/Work project/web/upload/");
-        return Result.success(filename);
+        String fileName=file.getOriginalFilename();
+        log.info("Upload file.filename={}",fileName);
+        storageService.save(file,fileName,localPath);
+
+        return Result.success(accessPath+fileName);
 
     }
 }
