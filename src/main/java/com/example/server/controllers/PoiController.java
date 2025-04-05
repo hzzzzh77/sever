@@ -3,6 +3,7 @@ package com.example.server.controllers;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.server.exception.PoiException;
 import com.example.server.form.PoiForm;
 import com.example.server.pojo.Pic;
 import com.example.server.pojo.Poi;
@@ -52,8 +53,12 @@ public class PoiController {//111111
     @GetMapping("/detail/{id}")//查看
     public Result detail(@PathVariable int id){
         log.info("poi detail,id={}",id);
+
         PoiVo poiVo = new PoiVo();
         Poi poi = poiservice.getById(id);
+        if (poi==null){
+            throw PoiException.NotFound();
+        }
         QueryWrapper query = new QueryWrapper();
         query.eq("poi_id", poi.getId());
         List<Pic> pics = picservice.list(query);
@@ -68,6 +73,7 @@ public class PoiController {//111111
         Poi poi = new Poi();
         BeanUtils.copyProperties(poiForm,poi);
         poiservice.saveMain(poi,poiForm.getPics());
+
         return detail(poi.getId());
     }
 

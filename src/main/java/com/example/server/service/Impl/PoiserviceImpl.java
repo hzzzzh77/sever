@@ -1,6 +1,7 @@
 package com.example.server.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.example.server.exception.PoiException;
 import com.example.server.mapper.PicMapper;
 import com.example.server.mapper.PoiMapper;
 import com.example.server.pojo.Pic;
@@ -20,31 +21,47 @@ public class PoiserviceImpl extends ServiceImpl<PoiMapper, Poi> implements IPois
 
     @Override
     public void saveMain(Poi poi, List<Pic> pics){
-        poiMapper.insert(poi);
+        int row = poiMapper.insert(poi);
+        if (row==0){
+            throw PoiException.OperateFail();
+        }
         if (pics != null){
-
             for (Pic pic : pics){
                 pic.setPoiId(poi.getId());
-                picMapper.insert(pic);
+                row = picMapper.insert(pic);
+                if (row==0){
+                    throw PoiException.OperateFail();
+                }
             }
         }
     }
     @Override
     public void deleteMain(Integer id){
-        poiMapper.deleteById(id);
+        int row = poiMapper.deleteById(id);
+        if (row==0){
+            throw PoiException.OperateFail();
+        }
 
-        picMapper.deleteByPoiId(id);
+        row = picMapper.deleteByPoiId(id);
+        if (row==0){
+            throw PoiException.OperateFail();
+        }
     }
 
     @Override
     public void updateMain(Poi poi, List<Pic> pics) {
-        poiMapper.updateById(poi);
-
+        int row = poiMapper.updateById(poi);
+        if (row==0){
+            throw PoiException.OperateFail();
+        }
         picMapper.deleteByPoiId(poi.getId());
         if (pics != null){
             for (Pic pic : pics){
                 pic.setPoiId(poi.getId());
-                picMapper.insert(pic);
+               row= picMapper.insert(pic);
+                if (row==0){
+                    throw PoiException.OperateFail();
+                }
             }
         }
     }

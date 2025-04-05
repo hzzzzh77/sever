@@ -13,6 +13,11 @@ public class Result<T> {
         Result r=new Result("suc",0,data);
         return r;
     }
+    public static <T> Result fail(){
+        Result r=new Result("fail",-1,null);
+        return r;
+    }
+
     private Result (String msg, int code, T data){
         this.msg=msg;
         this.code=0;
