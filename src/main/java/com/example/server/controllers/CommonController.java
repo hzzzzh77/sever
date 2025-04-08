@@ -44,4 +44,5 @@ public class CommonController {
         return Result.success(accessPath+fileName);
 
     }
+
 }
